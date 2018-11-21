@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 01dd27a2ee31ce74aa695e7b85d3ca52
+timeCreated: 1512235397
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Rexlia
+  fontNames:
+  - Rexlia
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
