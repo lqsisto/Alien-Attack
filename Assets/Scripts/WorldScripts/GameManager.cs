@@ -8,7 +8,9 @@ public class GameManager : MonoBehaviour
 	public static GameManager instance = null;
 	public GameObject eventSystem;
 	public GameObject inputManager;
+	public GameObject mainmenuSoundManager;
 	PausemenuController pausemenuController;
+	MainmenuController mainmenuController;
 
 	void Awake ()
 	{
@@ -28,6 +30,9 @@ public class GameManager : MonoBehaviour
 		switch (scene.buildIndex)
 		{
 			case 0:
+				
+				mainmenuController = GetComponent<MainmenuController>();
+				mainmenuController.InitializeMainMenuController();
 
 				if (!GameObject.FindObjectOfType<InputManager> ())
 				{
@@ -36,6 +41,10 @@ public class GameManager : MonoBehaviour
 				if (!GameObject.FindObjectOfType<Luminosity.IO.StandaloneInputModule> ())
 				{
 					GameObject e = Instantiate (eventSystem, Vector3.zero, Quaternion.identity);
+				}
+				if(!GameObject.FindObjectOfType<AudioSource>())
+				{
+					Instantiate(mainmenuSoundManager, Vector3.zero, Quaternion.identity);
 				}
 				break;
 
