@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Luminosity.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class UIController
+public class UIController : GameManager
 {
 
 	//Main Canvas
@@ -17,7 +19,7 @@ public class UIController
 	public static GameObject ScoreText;
 	public static GameObject CoinText;
 
-	static GameObject PausemenuPanel;
+	static GameObject pausemenuPanel;
 	static GameObject GameoverPanel;
 	static GameObject LevelCompletedPanel;
 	static GameObject SaveScorePanel;
@@ -25,26 +27,31 @@ public class UIController
 
 	//Countdownpanel children
 	public static GameObject TimerText;
+	static GameObject pauseBtnFrame;
+	static Button resumeBtn;
+	static Button mainmenuBtn;
 
-	public bool start_Countdown;
-	public static bool gamePaused;
-	float currCountdownValue;
-	public GameObject paused;
+	//Pausemenupanel children
+	public static bool start_Countdown;
+	public static bool gamePaused = false;
+	float secondsToWait;
+	GameObject pausedText;
 	public GameObject buttonFrame;
-	public Text timerText;
+	public static Text timerText;
 	float timer;
+	int continueGameWait = 3;
 
-	public static void FindLevelComponents ()
+	public void FindLevelComponents ()
 	{
 		//Find all uicomponents
-		//Remember to add dontdestroyonload component to menuelements so level 2 wont bring any problems!
+		//TODO Remember to add dontdestroyonload component to menuelements so level 2 wont bring any problems!
 
 		//Main Canvas
 		IngameCanvas = GameObject.FindGameObjectWithTag ("IngameCanvas");
 
 		//Panels
 		IngameUIPanel = IngameCanvas.transform.Find ("IngameUIPanel").gameObject;
-		PausemenuPanel = IngameCanvas.transform.Find ("PausemenuPanel").gameObject;
+		pausemenuPanel = IngameCanvas.transform.Find ("PausemenuPanel").gameObject;
 		GameoverPanel = IngameCanvas.transform.Find ("GameOverPanel").gameObject;
 		LevelCompletedPanel = IngameCanvas.transform.Find ("LevelCompletedPanel").gameObject;
 		SaveScorePanel = IngameCanvas.transform.Find ("SaveScorePanel").gameObject;
@@ -54,40 +61,87 @@ public class UIController
 		ScoreText = IngameUIPanel.transform.Find ("ScoreAndCoins").transform.Find ("ScoreText").gameObject;
 		CoinText = IngameUIPanel.transform.Find ("ScoreAndCoins").transform.Find ("CoinText").gameObject;
 
+		//Pausemenupanel children
+		pauseBtnFrame = pausemenuPanel.transform.Find ("ButtonFrame").gameObject;
+		resumeBtn = pauseBtnFrame.transform.Find ("ResumeButton").GetComponent<Button> ();
+		mainmenuBtn = pauseBtnFrame.transform.Find ("MainmenuButton").GetComponent<Button> ();
+		//TODO possibly add quit game button
+		timerText = pausemenuPanel.transform.Find ("TimerText").GetComponent<Text> ();
+		pausedText = pausemenuPanel.transform.Find ("PausedText").gameObject;
+
 		//Countdownpanel children
 		TimerText = countdownPanel.transform.Find ("TimerText").gameObject;
 
-		InitializePausemenu();
+		InitializePausemenu ();
 
 		Debug.Log ("Ui elements found, activating Timer panel!");
 	}
 
-	private static void InitializePausemenu ()
+	//--------------------------------------------------------Pausemenu-------------------------------------------------------//
+	protected void InitializePausemenu ()
 	{
-		// if (timerText.gameObject.activeInHierarchy)
-		// {
-		// 	timerText.gameObject.SetActive (false);
-		// }
-		if (PausemenuPanel.activeInHierarchy)
+		resumeBtn.onClick.AddListener (ResumeGame);
+		mainmenuBtn.onClick.AddListener (BackToMainmenu);
+
+		if (timerText.gameObject.activeInHierarchy)
 		{
-			PausemenuPanel.SetActive (false);
+			timerText.gameObject.SetActive (false);
+		}
+		if (pausemenuPanel.activeInHierarchy)
+		{
+			pausemenuPanel.SetActive (false);
+		}
+	}
+
+	public static void PauseGame ()
+	{
+		pausemenuPanel.SetActive (true);
+		gamePaused = true;
+		if (timerText.gameObject.activeInHierarchy)
+		{
+			timerText.gameObject.SetActive (false);
 		}
 	}
 
 	public void ResumeGame ()
 	{
-		paused.SetActive (false);
-		buttonFrame.SetActive (false);
+		pausedText.SetActive (false);
+		pauseBtnFrame.SetActive (false);
 		timerText.gameObject.SetActive (true);
-		start_Countdown = true;
-		// timerText.text = continueGameWait.ToString ();
-		// StartCountdown ();
+		timerText.text = continueGameWait.ToString ();
+		StartCoroutine (StartCountdownCoroutine (continueGameWait));
+	}
+
+	void BackToMainmenu ()
+	{
+		SceneManager.LoadScene (0, LoadSceneMode.Single);
 	}
 
 	public void QuitGame ()
 	{
 		Application.Quit ();
 		Debug.Break ();
+	}
+
+	public IEnumerator StartCountdownCoroutine (int secondsToWait)
+	{
+		while (secondsToWait > 0)
+		{
+			Debug.Log ("Countdown: " + secondsToWait);
+			yield return new WaitForSecondsRealtime (1);
+			secondsToWait--;
+			timerText.text = secondsToWait.ToString ();
+		}
+
+		Time.timeScale = 1;
+		pausedText.SetActive (true);
+		gamePaused = false;
+		timerText.gameObject.SetActive (true);
+		if (pausemenuPanel.activeInHierarchy)
+		{
+			pausemenuPanel.SetActive (false);
+		}
+
 	}
 
 	public static void ToggleCountdownPanel ()

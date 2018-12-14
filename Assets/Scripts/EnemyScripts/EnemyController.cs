@@ -17,7 +17,7 @@ namespace Enemy
         GameObject killzone;
         public GameObject explosionSound;
         public float enemyMovingSpeed = 10;
-        public Transform enemyHealthSlider;
+        public Slider enemyHealthSlider;
 
         public float enemyStartHealth;
         public float enemyCurrentHealth;
@@ -28,7 +28,7 @@ namespace Enemy
         EnemySpawnController enemySpawnController;
 
         // Use this for initialization
-        void Start ()
+        void Awake ()
         {
 
             enemyCurrentHealth = enemyStartHealth;
@@ -42,7 +42,7 @@ namespace Enemy
 
             InvokeRepeating ("EnemyShoot", 0, 4);
 
-            enemyHealthSlider = transform.Find ("EnemyHealthCanvas/EnemyHealthSlider");
+            enemyHealthSlider = transform.Find ("EnemyHealthCanvas").transform.Find ("EnemyHealthSlider").GetComponent<Slider>();
 
             killzone = GameObject.Find ("Killzone");
 

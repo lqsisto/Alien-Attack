@@ -4,17 +4,23 @@ using Luminosity.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Enemy;
+
+
 public class GameManager : MonoBehaviour
 {
 	public static GameManager instance = null;
-	public GameObject eventSystem;
-	public GameObject inputManager;
-	public GameObject mainmenuSoundManager;
+	[SerializeField] GameObject eventSystem;
+	[SerializeField] GameObject inputManager;
+	[SerializeField] GameObject mainmenuSoundManager;
+	[SerializeField] MainmenuController mainmenuController;
 	PausemenuController pausemenuController;
-	public MainmenuController mainmenuController;
+	EnemySpawnController enemySpawnCtrl;
+	UIController uiController;
 	protected static Text countdownText;
+	private bool keyPressed = false;
 
-	void Awake ()
+	private void Awake ()
 	{
 		if (instance == null)
 		{
@@ -25,20 +31,27 @@ public class GameManager : MonoBehaviour
 			Destroy (gameObject);
 		}
 		SceneManager.sceneLoaded += OnSceneLoaded;
-
 	}
 
-	private void Update()
+	protected virtual void Update ()
 	{
-		if(PausemenuController.gamePaused)
+		if (UIController.gamePaused)
 		{
 			Time.timeScale = 0;
-		} else {
+		}
+		else
+		{
 			Time.timeScale = 1;
+		}
+
+		if (InputManager.GetKeyDown (KeyCode.P) && !keyPressed)
+		{
+			Time.timeScale = 0;
+			UIController.PauseGame ();
 		}
 	}
 
-	void InstantiateMainmenuItems ()
+	private void InstantiateMainmenuItems ()
 	{
 		if (!GameObject.FindObjectOfType<InputManager> ())
 		{
@@ -72,12 +85,16 @@ public class GameManager : MonoBehaviour
 				break;
 
 			case 1:
-				UIController.FindLevelComponents ();
-				if(!gameObject.GetComponent<Timer>())
+				uiController = GameObject.FindObjectOfType<UIController>();
+				uiController.FindLevelComponents ();
+				if (!gameObject.GetComponent<Timer> ())
 				{
-				gameObject.AddComponent<Timer>();
+					gameObject.AddComponent<Timer> ();
 				}
-				StartCoroutine (GetComponent<Timer>().Countdown (3));
+				StartCoroutine (GetComponent<Timer> ().Countdown (3));
+				
+				enemySpawnCtrl = GameObject.FindObjectOfType<EnemySpawnController>();
+				enemySpawnCtrl.InitializeEnemySpawn();
 				break;
 		}
 	}

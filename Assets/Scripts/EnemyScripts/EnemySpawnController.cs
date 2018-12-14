@@ -10,7 +10,6 @@ namespace Enemy
         // public int numberOfEnemies;   //tells how many enemies will be spawned
 
         public int wavesBeforeBoss = 10;
-
         public int waveLimit; //how many enemies player have to destroy to advance to the next level
         public static float killedEnemies = 0; //number of destroyed enemies
 
@@ -35,7 +34,7 @@ namespace Enemy
         public bool instantiateBoss = true;
 
         // Use this for initialization
-        void Start ()
+        public void InitializeEnemySpawn ()
         {
             spawn = true;
             enemySpawnPos = GameObject.Find ("EnemySpawnPos");
@@ -51,7 +50,7 @@ namespace Enemy
         }
 
         // Update is called once per frame
-        void Update ()
+        public virtual void Update ()
         {
             enemyRandomizer = Random.Range (1, 11);
         }
@@ -66,7 +65,6 @@ namespace Enemy
             {
                 killedEnemies = waveLimit;
                 Destroy (GameObject.FindGameObjectWithTag ("Enemy"));
-
             }
 
             while (spawn)
@@ -84,7 +82,12 @@ namespace Enemy
                     enemy = enemy3;
                 }
 
-                instantiatedEnemy = Instantiate (enemy, new Vector2 (Random.Range (leftSpawnBorder.transform.position.x, rightSpawnBorder.transform.position.x), enemySpawnPos.transform.position.y), Quaternion.identity);
+                instantiatedEnemy = Instantiate (enemy, new Vector2 (
+                        Random.Range (
+                            leftSpawnBorder.transform.position.x,
+                            rightSpawnBorder.transform.position.x),
+                        enemySpawnPos.transform.position.y),
+                    Quaternion.identity);
 
                 yield return new WaitForSeconds (0.75f);
             }
