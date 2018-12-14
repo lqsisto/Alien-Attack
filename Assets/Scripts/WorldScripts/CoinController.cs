@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class CoinController : MonoBehaviour
 {
     public GameObject player;
-    public float moveTowardsTest;
+    public float moveTowardsSpeed;
     Vector2 startPos;
     public float randomMaxX;
     public float randomMinY;
@@ -39,15 +39,12 @@ public class CoinController : MonoBehaviour
 
         if (Vector2.Distance(gameObject.transform.position, player.transform.position) <= 5f)
         {
-
             nearplayer = true;
-
-            Destroy(GetComponent<Rigidbody2D>());
-
+             Destroy(GetComponent<Rigidbody2D>());
         }
         if (nearplayer)
         {
-            transform.Translate((player.transform.position - transform.position) * Time.deltaTime * moveTowardsTest);
+            transform.Translate((player.transform.position - transform.position) * Time.deltaTime * moveTowardsSpeed);
         }
 
 

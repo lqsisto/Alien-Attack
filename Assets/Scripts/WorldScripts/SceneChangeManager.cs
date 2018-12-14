@@ -20,28 +20,28 @@ public class SceneChangeManager : MonoBehaviour
 		{
 			Destroy (gameObject);
 		}
-		SceneManager.sceneLoaded += OnSceneLoaded;
+	//	SceneManager.sceneLoaded += OnSceneLoaded;
 	}
 
-	void OnSceneLoaded (Scene scene, LoadSceneMode mode)
-	{
-		switch (scene.buildIndex)
-		{
-			case 0:
+	// void OnSceneLoaded (Scene scene, LoadSceneMode mode)
+	// {
+	// 	switch (scene.buildIndex)
+	// 	{
+	// 		case 0:
 
-				if (!GameObject.FindObjectOfType<InputManager> ())
-				{
-					GameObject i = Instantiate (inputManager, Vector3.zero, Quaternion.identity);
-				}
-				if (!GameObject.FindObjectOfType<Luminosity.IO.StandaloneInputModule> ())
-				{
-					GameObject e = Instantiate (eventSystem, Vector3.zero, Quaternion.identity);
-				}
-				break;
+	// 			if (!GameObject.FindObjectOfType<InputManager> ())
+	// 			{
+	// 				GameObject i = Instantiate (inputManager, Vector3.zero, Quaternion.identity);
+	// 			}
+	// 			if (!GameObject.FindObjectOfType<Luminosity.IO.StandaloneInputModule> ())
+	// 			{
+	// 				GameObject e = Instantiate (eventSystem, Vector3.zero, Quaternion.identity);
+	// 			}
+	// 			break;
 
-			case 1:
-				Timer.StartTimer(3);
-				break;
-		}
-	}
+	// 		case 1:
+	// 			StartCoroutine(Timer.Countdown (3));
+	// 			break;
+	// 	}
+	// }
 }

@@ -12,7 +12,7 @@ namespace Player
         public GameObject player; //player
         public Rigidbody2D playerRB; //player's rigidbody
         public float movingUpSpeed; //player's speed
-        public Vector3 mousePos; //this is the postion player moves
+        public Vector3 mousePos; //this is the position player moves
         public Vector3 start; //starting position
 
         public GameObject bullet; //bullet GameObject
@@ -57,20 +57,21 @@ namespace Player
         {
             playerRB.freezeRotation = true; //prevents the player from rotating
 
-            if (pauseMenuController.gamePaused == false)
+            if (PausemenuController.gamePaused == false)
             {
                 mousePos = InputManager.mousePosition;
                 mousePos.z = 10;
                 mousePos = Camera.main.ScreenToWorldPoint (mousePos);
 
-                if (mousePos.x <= leftWall.transform.position.x + 1f)
+                if (mousePos.x <= leftWall.transform.position.x + 7f)
                 {
-                    mousePos = new Vector3 (leftWall.transform.position.x + 1.5f, mousePos.y, transform.position.z);
+                    mousePos = new Vector3 (leftWall.transform.position.x + 7.5f, mousePos.y, transform.position.z);
                 }
-                else if (mousePos.x >= rightWall.transform.position.x - 1f)
+                else if (mousePos.x >= rightWall.transform.position.x - 7f)
                 {
-                    mousePos = new Vector3 (rightWall.transform.position.x - 1.5f, mousePos.y, transform.position.z);
+                    mousePos = new Vector3 (rightWall.transform.position.x - 7.5f, mousePos.y, transform.position.z);
                 }
+
 
                 if (InputManager.GetKeyDown (KeyCode.Mouse0))
                 {
@@ -86,12 +87,11 @@ namespace Player
 
                 isColliding = 0;
             }
-
         }
 
         void Shoot ()
         {
-            if (pauseMenuController.gamePaused == false)
+            if (PausemenuController.gamePaused == false)
             {
                 GameObject bullet = Instantiate (Resources.Load ("Bullet"), new Vector3 (player.transform.position.x, player.transform.position.y + 0.75f, //instantiate bullet gameobject on player
                     player.transform.position.z), Quaternion.identity) as GameObject;

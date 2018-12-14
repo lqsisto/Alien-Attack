@@ -9,7 +9,7 @@ public class PausemenuController : MonoBehaviour
     public GameObject pausemenuCanvas;
 
     public bool start_Countdown;
-    public bool gamePaused;
+    public static bool gamePaused;
     float currCountdownValue;
     public GameObject paused;
     public GameObject buttonFrame;

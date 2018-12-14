@@ -3,30 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Timer : MonoBehaviour
+public class Timer : GameManager
 {
 
-    static Timer t;
-
-    static Text countdownText;
     private void Awake ()
     {
-        countdownText = UIController.TimerText.GetComponent<Text>();
-        t = this;
+        countdownText = UIController.TimerText.GetComponent<Text> ();
     }
 
-    public static void StartTimer (int countdownSecs)
+    public IEnumerator Countdown (int countdownSecs)
     {
-        t.StartCoroutine (Countdown (countdownSecs));
-    }
-
-    static IEnumerator Countdown (int countdownSecs)
-    {
-        while (countdownSecs > -1)
+        print ("inside timer");
+        PausemenuController.gamePaused = true;
+        while (countdownSecs > 0)
         {
             countdownText.text = countdownSecs.ToString ();
             yield return new WaitForSecondsRealtime (1);
             countdownSecs--;
         }
+        PausemenuController.gamePaused = false;
+        UIController.ToggleCountdownPanel();
     }
 }
