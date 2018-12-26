@@ -3,14 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Timer : GameManager
+public class Timer : UIController
 {
-
-    private void Awake ()
-    {
-        countdownText = UIController.TimerText.GetComponent<Text> ();
-    }
-
     public IEnumerator Countdown (int countdownSecs)
     {
         print ("inside timer");
@@ -22,6 +16,6 @@ public class Timer : GameManager
             countdownSecs--;
         }
         PausemenuController.gamePaused = false;
-        UIController.ToggleCountdownPanel();
+        ToggleCountdownPanel();
     }
 }

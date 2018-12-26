@@ -1,11 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Enemy;
 using Luminosity.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Enemy;
-
 
 public class GameManager : MonoBehaviour
 {
@@ -16,38 +15,53 @@ public class GameManager : MonoBehaviour
 	[SerializeField] MainmenuController mainmenuController;
 	PausemenuController pausemenuController;
 	EnemySpawnController enemySpawnCtrl;
-	UIController uiController;
-	protected static Text countdownText;
+	protected UIController uiController;
 	private bool keyPressed = false;
 
 	private void Awake ()
 	{
-		if (instance == null)
+		switch (SceneManager.GetActiveScene ().buildIndex)
 		{
-			instance = this;
+			case 0:
+				if (instance == null)
+				{
+					instance = this;
+				}
+				else if (instance != this)
+				{
+					Destroy (gameObject);
+				}
+
+				InstantiateMainmenuItems ();
+
+				mainmenuController = GameObject.FindObjectOfType<MainmenuController> ();
+				mainmenuController.InitializeMainMenuController ();
+				break;
+			case 1:
+				uiController = GameObject.FindObjectOfType<UIController> ();
+				uiController.FindLevelComponents ();
+
+				enemySpawnCtrl = GameObject.FindObjectOfType<EnemySpawnController> ();
+				enemySpawnCtrl.InitializeEnemySpawn ();
+				break;
 		}
-		else if (instance != this)
-		{
-			Destroy (gameObject);
-		}
-		SceneManager.sceneLoaded += OnSceneLoaded;
 	}
 
 	protected virtual void Update ()
 	{
-		if (UIController.gamePaused)
-		{
-			Time.timeScale = 0;
-		}
-		else
-		{
-			Time.timeScale = 1;
-		}
+		// if (uiController.gamePaused)
+		// {
+		// 	Time.timeScale = 0;
+		// }
+		// else
+		// {
+		// 	Time.timeScale = 1;
+		// }
 
 		if (InputManager.GetKeyDown (KeyCode.P) && !keyPressed)
 		{
 			Time.timeScale = 0;
-			UIController.PauseGame ();
+			uiController.PauseGame ();
 		}
 	}
 
@@ -71,31 +85,31 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	void OnSceneLoaded (Scene scene, LoadSceneMode mode)
-	{
-		switch (scene.buildIndex)
-		{
-			case 0:
+	// void OnSceneLoaded (Scene scene, LoadSceneMode mode)
+	// {
+	// 	switch (scene.buildIndex)
+	// 	{
+	// 		case 0:
 
-				InstantiateMainmenuItems ();
+	// 			InstantiateMainmenuItems ();
 
-				mainmenuController = GameObject.FindObjectOfType<MainmenuController> ();
-				mainmenuController.InitializeMainMenuController ();
+	// 			mainmenuController = GameObject.FindObjectOfType<MainmenuController> ();
+	// 			mainmenuController.InitializeMainMenuController ();
 
-				break;
+	// 			break;
 
-			case 1:
-				uiController = GameObject.FindObjectOfType<UIController>();
-				uiController.FindLevelComponents ();
-				if (!gameObject.GetComponent<Timer> ())
-				{
-					gameObject.AddComponent<Timer> ();
-				}
-				StartCoroutine (GetComponent<Timer> ().Countdown (3));
-				
-				enemySpawnCtrl = GameObject.FindObjectOfType<EnemySpawnController>();
-				enemySpawnCtrl.InitializeEnemySpawn();
-				break;
-		}
-	}
+	// case 1:
+	// 	uiController = GameObject.FindObjectOfType<UIController> ();
+	// 	uiController.FindLevelComponents ();
+	// 	if (!gameObject.GetComponent<Timer> ())
+	// 	{
+	// 		gameObject.AddComponent<Timer> ();
+	// 	}
+	// 	StartCoroutine (GetComponent<Timer> ().Countdown (3));
+
+	// 	enemySpawnCtrl = GameObject.FindObjectOfType<EnemySpawnController> ();
+	// 	enemySpawnCtrl.InitializeEnemySpawn ();
+	// 	break;
+	// 	}
+	// }
 }
