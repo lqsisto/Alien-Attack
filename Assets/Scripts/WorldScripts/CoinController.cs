@@ -13,54 +13,48 @@ public class CoinController : MonoBehaviour
     public float randomMaxY;
     bool nearplayer = false;
 
-
-
     // Use this for initialization
-    void Start()
+    void Start ()
     {
-        if (!gameObject.GetComponent<Rigidbody2D>())
+        if (!gameObject.GetComponent<Rigidbody2D> ())
         {
-            gameObject.AddComponent<Rigidbody2D>();
+            gameObject.AddComponent<Rigidbody2D> ();
         }
-        gameObject.AddComponent<PolygonCollider2D>();
-        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(0f, randomMaxX), Random.Range(randomMinY, randomMaxY)), ForceMode2D.Impulse);
+        gameObject.AddComponent<PolygonCollider2D> ();
+        gameObject.GetComponent<Rigidbody2D> ().AddForce (new Vector2 (Random.Range (0f, randomMaxX), Random.Range (randomMinY, randomMaxY)), ForceMode2D.Impulse);
 
         startPos = gameObject.transform.position;
-        player = GameObject.Find("Player");
-
-
+        player = GameObject.Find ("Player");
 
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void FixedUpdate ()
     {
 
-
-        if (Vector2.Distance(gameObject.transform.position, player.transform.position) <= 5f)
+        if (Vector2.Distance (gameObject.transform.position, player.transform.position) <= 5f)
         {
             nearplayer = true;
-             Destroy(GetComponent<Rigidbody2D>());
+            // Destroy(GetComponent<Rigidbody2D>());
         }
         if (nearplayer)
         {
-            transform.Translate((player.transform.position - transform.position) * Time.deltaTime * moveTowardsSpeed);
+            //transform.Translate((player.transform.position - transform.position) * Time.deltaTime * moveTowardsSpeed);
+            transform.position = Vector2.MoveTowards(transform.position, player.transform.position, 1);
         }
-
-
     }
 
-    void OnCollisionEnter2D(Collision2D col)
+    void OnCollisionEnter2D (Collision2D col)
     {
-        if (col.gameObject.CompareTag("Player"))
+        if (col.gameObject.CompareTag ("Player"))
         {
-            Destroy(gameObject);
+            Destroy (gameObject);
             TextController.coins += 10;
         }
     }
 
-    void OnBecameInvisible()
+    void OnBecameInvisible ()
     {
-        Destroy(gameObject);
+        Destroy (gameObject);
     }
 }
